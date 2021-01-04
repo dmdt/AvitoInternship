@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class LAdapter: ListAdapter<ListItem, LViewHolder>(ListItemDiffCallback()) {
+class LAdapter(val callback: MainActivity.ItemRemovedCallback): ListAdapter<ListItem, LViewHolder>(ListItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LViewHolder {
         return LViewHolder(
             LayoutInflater
@@ -19,7 +19,11 @@ class LAdapter: ListAdapter<ListItem, LViewHolder>(ListItemDiffCallback()) {
     }
 
     override fun onBindViewHolder(holder: LViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val item = getItem(position)
+        holder.bind(item)
+        holder.bDelete.setOnClickListener {
+            callback.removeItem(holder.adapterPosition)
+        }
     }
 }
 
@@ -32,8 +36,8 @@ class ListItemDiffCallback: DiffUtil.ItemCallback<ListItem>() {
 }
 
 class LViewHolder(v: View): RecyclerView.ViewHolder(v) {
-    private val tvId: TextView = v.findViewById(R.id.tvItemId)
-    private val bDelete: Button = v.findViewById(R.id.bDelete)
+    val tvId: TextView = v.findViewById(R.id.tvItemId)
+    val bDelete: Button = v.findViewById(R.id.bDelete)
 
     fun bind(item: ListItem) {
         tvId.text = item.id.toString()
