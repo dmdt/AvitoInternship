@@ -9,11 +9,15 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
+
+    private var itemCount: Int = 0
+
 //    private val itemThread = ItemThread()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSubtitle()
 
         val recycler: RecyclerView = findViewById(R.id.rvList)
         val listAdapter = LAdapter(object: ItemRemovedCallback {
@@ -33,9 +37,16 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.listLd.observe(this) {
             listAdapter.submitList(it.toList())
+
+            itemCount = it.size
+            setSubtitle()
         }
 
 //        itemThread.start()
+    }
+
+    private fun setSubtitle() {
+        supportActionBar?.subtitle = "Items in list: $itemCount."
     }
 
 //    override fun onDestroy() {

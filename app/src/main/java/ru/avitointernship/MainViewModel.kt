@@ -16,8 +16,13 @@ class MainViewModel : ViewModel() {
     private val removedItemIds = mutableListOf<Int>()
 
     init {
+        for (i in 0..14) {
+            list.add(ListItem(currentNumber))
+            currentNumber++
+        }
+        listLd.value = list
+
         viewModelScope.launch {
-            delay(1500)
             addItemFromCoroutine()
         }
     }
@@ -36,6 +41,7 @@ class MainViewModel : ViewModel() {
 
     private suspend fun addItemFromCoroutine() {
         while (true) {
+            delay(5000)
             // Handle empty list insertion
             val position = when {
                 list.isEmpty() -> 0
@@ -50,7 +56,6 @@ class MainViewModel : ViewModel() {
                 removedItemIds.removeAt(0)
             }
             listLd.value = list
-            delay(5000)
         }
     }
 }
