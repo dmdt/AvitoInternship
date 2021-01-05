@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
+//    private val itemThread = ItemThread()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +29,25 @@ class MainActivity : AppCompatActivity() {
         viewModel.listLd.observe(this) {
             listAdapter.submitList(it.toList())
         }
+
+//        itemThread.start()
     }
+
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        itemThread.interrupt()
+//    }
 
     interface ItemRemovedCallback {
         fun removeItem(pos: Int)
     }
+
+//    inner class ItemThread: Thread() {
+//        override fun run() {
+//            while (!isInterrupted) {
+//                viewModel.addItemFromThread()
+//                sleep(5000)
+//            }
+//        }
+//    }
 }
