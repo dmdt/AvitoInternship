@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class LAdapter(val callback: MainActivity.ItemRemovedCallback): ListAdapter<ListItem, LViewHolder>(ListItemDiffCallback()) {
+class LAdapter(private val itemRemovedCallback: MainActivity.ItemRemovedCallback) :
+    ListAdapter<ListItem, LViewHolder>(ListItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LViewHolder {
         return LViewHolder(
             LayoutInflater
@@ -21,13 +22,15 @@ class LAdapter(val callback: MainActivity.ItemRemovedCallback): ListAdapter<List
     override fun onBindViewHolder(holder: LViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
+        holder.bDelete.isEnabled = true
         holder.bDelete.setOnClickListener {
-            callback.removeItem(holder.adapterPosition)
+            it.isEnabled = false // Preventing double-click on button
+            itemRemovedCallback.removeItem(holder.adapterPosition)
         }
     }
 }
 
-class ListItemDiffCallback: DiffUtil.ItemCallback<ListItem>() {
+class ListItemDiffCallback : DiffUtil.ItemCallback<ListItem>() {
     override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean =
         oldItem == newItem
 
@@ -35,7 +38,7 @@ class ListItemDiffCallback: DiffUtil.ItemCallback<ListItem>() {
         oldItem == newItem
 }
 
-class LViewHolder(v: View): RecyclerView.ViewHolder(v) {
+class LViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     val tvId: TextView = v.findViewById(R.id.tvItemId)
     val bDelete: Button = v.findViewById(R.id.bDelete)
 

@@ -7,25 +7,23 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class MainViewModel: ViewModel() {
+class MainViewModel : ViewModel() {
     private val list: ArrayList<ListItem> = ArrayList()
     val listLd: MutableLiveData<List<ListItem>> =
         MutableLiveData<List<ListItem>>()
 
     private var currentNumber: Int = 0
+    private val removedItemIds = mutableListOf<Int>()
 
     init {
-        for (i in 0..10) {
-            list.add(ListItem(currentNumber))
-            currentNumber++
-        }
-        listLd.value = list
         viewModelScope.launch {
+            delay(1500)
             addItemFromCoroutine()
         }
     }
 
     fun removeItem(pos: Int) {
+        removedItemIds.add(list[pos].id)
         list.removeAt(pos)
         listLd.value = list
     }
@@ -38,8 +36,19 @@ class MainViewModel: ViewModel() {
 
     private suspend fun addItemFromCoroutine() {
         while (true) {
-            list.add(Random.nextInt(0, list.size), ListItem(currentNumber))
-            currentNumber++
+            // Handle empty list insertion
+            val position = when {
+                list.isEmpty() -> 0
+                else -> Random.nextInt(0, list.size)
+            }
+
+            if (removedItemIds.isEmpty()) {
+                list.add(position, ListItem(currentNumber))
+                currentNumber++
+            } else {
+                list.add(position, ListItem(removedItemIds[0]))
+                removedItemIds.removeAt(0)
+            }
             listLd.value = list
             delay(5000)
         }
