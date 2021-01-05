@@ -1,5 +1,6 @@
 package ru.avitointernship
 
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -22,7 +23,11 @@ class MainActivity : AppCompatActivity() {
         })
 
         recycler.apply {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                GridLayoutManager(context, 4)
+            } else {
+                GridLayoutManager(context, 2)
+            }
             adapter = listAdapter
         }
 
