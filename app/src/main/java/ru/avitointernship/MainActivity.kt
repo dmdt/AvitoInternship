@@ -6,13 +6,13 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ru.avitointernship.adapters.Adapter
+import ru.avitointernship.viewmodels.MainViewModel
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
 
     private var itemCount: Int = 0
-
-//    private val itemThread = ItemThread()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setSubtitle()
 
         val recycler: RecyclerView = findViewById(R.id.rvList)
-        val listAdapter = LAdapter(object: ItemRemovedCallback {
+        val listAdapter = Adapter(object: ItemRemovedCallback {
             override fun removeItem(pos: Int) {
                 viewModel.removeItem(pos)
             }
@@ -41,29 +41,13 @@ class MainActivity : AppCompatActivity() {
             itemCount = it.size
             setSubtitle()
         }
-
-//        itemThread.start()
     }
 
     private fun setSubtitle() {
         supportActionBar?.subtitle = "Items in list: $itemCount."
     }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        itemThread.interrupt()
-//    }
-
     interface ItemRemovedCallback {
         fun removeItem(pos: Int)
     }
-
-//    inner class ItemThread: Thread() {
-//        override fun run() {
-//            while (!isInterrupted) {
-//                viewModel.addItemFromThread()
-//                sleep(5000)
-//            }
-//        }
-//    }
 }

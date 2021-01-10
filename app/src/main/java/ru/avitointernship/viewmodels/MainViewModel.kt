@@ -1,10 +1,11 @@
-package ru.avitointernship
+package ru.avitointernship.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.avitointernship.data.ListItem
 import kotlin.random.Random
 
 class MainViewModel : ViewModel() {
@@ -32,12 +33,6 @@ class MainViewModel : ViewModel() {
         list.removeAt(pos)
         listLd.value = list
     }
-
-//    fun addItemFromThread() {
-//        list.add(Random.nextInt(0, list.size), ListItem(currentNumber))
-//        currentNumber++
-//        listLd.postValue(list)
-//    }
 
     private suspend fun addItemFromCoroutine() {
         while (true) {
